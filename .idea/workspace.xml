@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7a8423e8-7ab8-45b1-956f-3e7231a13c44" name="Default Changelist" comment="" />
+    <list default="true" id="7a8423e8-7ab8-45b1-956f-3e7231a13c44" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -28,6 +38,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="settings.editor.selected.configurable" value="vcs.Git" />
   </component>
   <component name="ServiceViewManager">
     <option name="viewStates">
@@ -51,7 +62,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1576412052415</updated>
-      <workItem from="1576413336223" duration="3493000" />
+      <workItem from="1576413336223" duration="4732000" />
     </task>
     <task id="LOCAL-00001" summary="test git on pycharm">
       <created>1576423366328</created>
@@ -67,7 +78,21 @@
       <option name="project" value="LOCAL" />
       <updated>1576423527940</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="delete useless files">
+      <created>1576423601418</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1576423601418</updated>
+    </task>
+    <task id="LOCAL-00004" summary="测试文件">
+      <created>1576423770582</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1576423770582</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -87,24 +112,37 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="test git on pycharm" />
     <MESSAGE value="delete useless files" />
-    <option name="LAST_COMMIT_MESSAGE" value="delete useless files" />
+    <MESSAGE value="测试文件" />
+    <option name="LAST_COMMIT_MESSAGE" value="测试文件" />
   </component>
   <component name="WindowStateProjectService">
     <state x="552" y="181" key="#Deployment" timestamp="1576417046212">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="552" y="181" key="#Deployment/1920.0.1280.693/0.0.1920.1040@0.0.1920.1040" timestamp="1576417046212" />
-    <state x="572" y="117" key="CommitChangelistDialog2" timestamp="1576423599884">
+    <state x="572" y="117" key="CommitChangelistDialog2" timestamp="1576423769302">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="572" y="117" key="CommitChangelistDialog2/1920.0.1280.693/0.0.1920.1040@0.0.1920.1040" timestamp="1576423599884" />
+    <state x="572" y="117" key="CommitChangelistDialog2/1920.0.1280.693/0.0.1920.1040@0.0.1920.1040" timestamp="1576423769302" />
     <state x="750" y="244" key="RollbackChangesDialog" timestamp="1576423315775">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="750" y="244" key="RollbackChangesDialog/1920.0.1280.693/0.0.1920.1040@0.0.1920.1040" timestamp="1576423315775" />
+    <state x="463" y="164" key="SettingsEditor" timestamp="1576424047455">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="463" y="164" key="SettingsEditor/1920.0.1280.693/0.0.1920.1040@0.0.1920.1040" timestamp="1576424047455" />
+    <state x="552" y="255" key="Vcs.Push.Dialog.v2" timestamp="1576424759833">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="552" y="255" key="Vcs.Push.Dialog.v2/1920.0.1280.693/0.0.1920.1040@0.0.1920.1040" timestamp="1576424759833" />
     <state x="652" y="347" key="com.intellij.ide.util.TipDialog" timestamp="1576413457243">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="652" y="347" key="com.intellij.ide.util.TipDialog/1920.0.1280.693/0.0.1920.1040@0.0.1920.1040" timestamp="1576413457243" />
+    <state x="763" y="398" key="git4idea.rebase.GitRebaseDialog" timestamp="1576423854990">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="763" y="398" key="git4idea.rebase.GitRebaseDialog/1920.0.1280.693/0.0.1920.1040@0.0.1920.1040" timestamp="1576423854990" />
   </component>
 </project>
