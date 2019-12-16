@@ -57,11 +57,18 @@ def simple_regression(datay,datax):
 
 def ts_corr_mat(mat1,mat2):
     # 计算两个矩阵 对应的截面的相关性
+
     pass
 
 def ts_corr_vet(vet1,vet2):
-    # 计算两个向量的相关性
-    pass
+    # 计算两个向量的相关性 如果存在nan值怎么处理 两个向量的nan值所在的位置不同
+    # 取两个vect都不为nan的值
+    notNullIndex = ~(np.isnan(vet1) or np.isnan(vet2))
+    new_vet1 = vet1[notNullIndex]
+    new_vet2 = vet2[notNullIndex]
+    cov = np.nanmean(new_vet1*new_vet2) - np.nanmean(new_vet1)*np.nanmean(new_vet2)
+    corr = cov/(np.nanstd(new_vet1)*np.nanstd(new_vet2))
+    return corr
 
 
 def optimazier(data,*args):
