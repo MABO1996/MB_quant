@@ -47,6 +47,7 @@ def all_period_cross_simple_regression(datay,datax):
         results = model.fit()
 
 def simple_regression(datay,datax):
+    # 进行单元回归 一期
     x = datax
     X = sm.add_constant(x)
     y = datay
@@ -54,9 +55,14 @@ def simple_regression(datay,datax):
     results = model.fit()
     return results
 
-def ts_corr(data1,data2):
-
+def ts_corr_mat(mat1,mat2):
+    # 计算两个矩阵 对应的截面的相关性
     pass
+
+def ts_corr_vet(vet1,vet2):
+    # 计算两个向量的相关性
+    pass
+
 
 def optimazier(data,*args):
 
