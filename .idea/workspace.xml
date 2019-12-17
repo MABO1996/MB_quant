@@ -64,6 +64,8 @@
       <updated>1576412052415</updated>
       <workItem from="1576413336223" duration="6594000" />
       <workItem from="1576458644681" duration="7182000" />
+      <workItem from="1576546690288" duration="100000" />
+      <workItem from="1576546804263" duration="7978000" />
     </task>
     <task id="LOCAL-00001" summary="test git on pycharm">
       <created>1576423366328</created>
@@ -162,10 +164,11 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="552" y="255" key="Vcs.Push.Dialog.v2/1920.0.1280.693/0.0.1920.1040@0.0.1920.1040" timestamp="1576424995289" />
-    <state x="435" y="227" key="com.intellij.ide.util.TipDialog" timestamp="1576458647800">
-      <screen x="0" y="0" width="1280" height="680" />
+    <state x="653" y="347" key="com.intellij.ide.util.TipDialog" timestamp="1576546883900">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="435" y="227" key="com.intellij.ide.util.TipDialog/0.0.1280.680@0.0.1280.680" timestamp="1576458647800" />
+    <state x="653" y="347" key="com.intellij.ide.util.TipDialog/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1576546883900" />
     <state x="652" y="347" key="com.intellij.ide.util.TipDialog/1920.0.1280.693/0.0.1920.1040@0.0.1920.1040" timestamp="1576413457243" />
     <state x="763" y="398" key="git4idea.rebase.GitRebaseDialog" timestamp="1576423854990">
       <screen x="0" y="0" width="1920" height="1040" />
