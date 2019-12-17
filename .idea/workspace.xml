@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="7a8423e8-7ab8-45b1-956f-3e7231a13c44" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/operators.py" beforeDir="false" afterPath="$PROJECT_DIR$/operators.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EvaAlpha.py" beforeDir="false" afterPath="$PROJECT_DIR$/EvaAlpha.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,7 +65,7 @@
       <workItem from="1576413336223" duration="6594000" />
       <workItem from="1576458644681" duration="7182000" />
       <workItem from="1576546690288" duration="100000" />
-      <workItem from="1576546804263" duration="7978000" />
+      <workItem from="1576546804263" duration="18349000" />
     </task>
     <task id="LOCAL-00001" summary="test git on pycharm">
       <created>1576423366328</created>
@@ -116,7 +116,14 @@
       <option name="project" value="LOCAL" />
       <updated>1576463993714</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="补充部分alpha评价，运算操作符等">
+      <created>1576564230771</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1576564230771</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -147,10 +154,11 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="552" y="181" key="#Deployment/1920.0.1280.693/0.0.1920.1040@0.0.1920.1040" timestamp="1576417046212" />
-    <state x="381" y="0" key="CommitChangelistDialog2" timestamp="1576463992230">
-      <screen x="0" y="0" width="1280" height="680" />
+    <state x="572" y="0" key="CommitChangelistDialog2" timestamp="1576564230279">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="381" y="0" key="CommitChangelistDialog2/0.0.1280.680@0.0.1280.680" timestamp="1576463992230" />
+    <state x="572" y="0" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1576564230279" />
     <state x="572" y="117" key="CommitChangelistDialog2/1920.0.1280.693/0.0.1920.1040@0.0.1920.1040" timestamp="1576424959902" />
     <state x="750" y="244" key="RollbackChangesDialog" timestamp="1576423315775">
       <screen x="0" y="0" width="1920" height="1040" />
