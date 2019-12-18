@@ -66,6 +66,27 @@ def simple_regression(datay,datax):
     results = model.fit()
     return results.params
 
+
+def simple_regression_resid(datay, datax):
+    # 单元回归 一期
+    x = datax
+    y = datay
+
+    not_nan_flag = ~(np.isnan(x * y))
+    not_nan_index = np.arange(len(not_nan_flag))[ not_nan_flag ]
+
+    new_x = x[ not_nan_flag ]
+    new_y = y[ not_nan_flag ]
+    X = sm.add_constant(new_x.T)
+    model = sm.OLS(new_y, X)
+    results = model.fit()
+
+    resid_result = np.zeros_like(y)
+    resid_result[ : ] = np.nan
+    resid_result[ not_nan_index ] = results.resid
+
+    return resid_result
+
 def multi_regression(datay,datax):
     # 进行单元回归 一期
     x = datax
@@ -74,6 +95,30 @@ def multi_regression(datay,datax):
     model = sm.OLS(y, X, missing='drop')
     results = model.fit()
     return results.params # 参数为常数开始 其余的对应datax的顺序
+
+
+def multi_regression_resid(datay, *args):
+    # 进行多元回归 一期
+    x = [ ]
+    for datax in args:
+        x.append(datax)
+    x = np.vstack(x)
+    y = datay
+    not_nan_flag = ~np.any(np.isnan(x * y), axis=0)
+    not_nan_index = np.arange(len(not_nan_flag))[ not_nan_flag ]
+
+    x = x.T
+    new_x = x[ not_nan_flag ]
+    new_y = y[ not_nan_flag ]
+    X = sm.add_constant(new_x)
+    model = sm.OLS(new_y, X)
+    results = model.fit()
+
+    resid_result = np.zeros_like(y)
+    resid_result[ : ] = np.nan
+    resid_result[ not_nan_index ] = results.resid
+    return resid_result
+
 
 def corr_mat(mat1,mat2):
     # 计算两个矩阵 对应的截面的相关性
