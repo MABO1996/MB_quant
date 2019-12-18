@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="7a8423e8-7ab8-45b1-956f-3e7231a13c44" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/operators.py" beforeDir="false" afterPath="$PROJECT_DIR$/operators.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,7 +66,7 @@
       <workItem from="1576546690288" duration="100000" />
       <workItem from="1576546804263" duration="18349000" />
       <workItem from="1576585412269" duration="1244000" />
-      <workItem from="1576681486635" duration="1628000" />
+      <workItem from="1576681486635" duration="1940000" />
     </task>
     <task id="LOCAL-00001" summary="test git on pycharm">
       <created>1576423366328</created>
@@ -125,7 +124,14 @@
       <option name="project" value="LOCAL" />
       <updated>1576564230771</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="补充了单期取残差的函数">
+      <created>1576689451489</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1576689451489</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -149,19 +155,20 @@
     <MESSAGE value="delete useless files" />
     <MESSAGE value="测试文件" />
     <MESSAGE value="补充部分alpha评价，运算操作符等" />
-    <option name="LAST_COMMIT_MESSAGE" value="补充部分alpha评价，运算操作符等" />
+    <MESSAGE value="补充了单期取残差的函数" />
+    <option name="LAST_COMMIT_MESSAGE" value="补充了单期取残差的函数" />
   </component>
   <component name="WindowStateProjectService">
     <state x="552" y="181" key="#Deployment" timestamp="1576417046212">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="552" y="181" key="#Deployment/1920.0.1280.693/0.0.1920.1040@0.0.1920.1040" timestamp="1576417046212" />
-    <state x="572" y="0" key="CommitChangelistDialog2" timestamp="1576564230279">
+    <state x="572" y="117" key="CommitChangelistDialog2" timestamp="1576689449999">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="381" y="0" key="CommitChangelistDialog2/0.0.1280.680@0.0.1280.680" timestamp="1576463992230" />
     <state x="572" y="0" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1576564230279" />
-    <state x="572" y="117" key="CommitChangelistDialog2/1920.0.1280.693/0.0.1920.1040@0.0.1920.1040" timestamp="1576424959902" />
+    <state x="572" y="117" key="CommitChangelistDialog2/1920.0.1280.693/0.0.1920.1040@0.0.1920.1040" timestamp="1576689449999" />
     <state x="750" y="244" key="RollbackChangesDialog" timestamp="1576423315775">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -170,10 +177,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="463" y="164" key="SettingsEditor/1920.0.1280.693/0.0.1920.1040@0.0.1920.1040" timestamp="1576424047455" />
-    <state x="552" y="255" key="Vcs.Push.Dialog.v2" timestamp="1576424995289">
+    <state x="552" y="255" key="Vcs.Push.Dialog.v2" timestamp="1576689469683">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="255" key="Vcs.Push.Dialog.v2/1920.0.1280.693/0.0.1920.1040@0.0.1920.1040" timestamp="1576424995289" />
+    <state x="552" y="255" key="Vcs.Push.Dialog.v2/1920.0.1280.693/0.0.1920.1040@0.0.1920.1040" timestamp="1576689469683" />
     <state x="652" y="347" key="com.intellij.ide.util.TipDialog" timestamp="1576681521685">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
