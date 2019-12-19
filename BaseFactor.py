@@ -46,7 +46,7 @@ class Alpha(object):
         # 进行单因子的各种测试
         Evaluator = EvaAlpha()
         alpha = pd.read_csv(os.path.join(self.data_path,'rtn20.csv'),index_col= 0).values
-        Evaluator.level_alpha(alpha)
+        Evaluator.alpha_performance(alpha)
 
     def save_data(self,data,name):
         tempdata = pd.DataFrame(data,index=self.tradeday,columns=self.tickers)

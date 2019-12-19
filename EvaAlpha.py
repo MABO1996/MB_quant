@@ -19,7 +19,6 @@ class EvaAlpha(object):
         self.start_date = self.tradeday.iloc[0].date.strftime("%Y/%m/%d")
         self.end_data = self.tradeday.iloc[-1].date.strftime("%Y/%m/%d")
 
-
     def get_position(self,alpha,low = 0,high = 0.1,weightType = 0,long= 1):
         # 根据因子获取股票的仓位 分为多头和空头
         # long = 1纯多头；long = -1；纯空头long = 0多空
@@ -120,6 +119,39 @@ class EvaAlpha(object):
         turnoverrate = np.nanmean(buyTurnover - sellTurnover)
         return turnoverrate
 
+    def NetValueGraph(self,netvalue,name = 0):
+        # 根据净值进行画图
+        # todo 精细化作图 包括处理颜色 标题 以及 横坐标的标签等
+        plt.plot(netvalue)
+        plt.title('net value of the alpha')
+        if name:
+            plt.savefig(os.path.join(self.result_path,'netvalue_%s.jpg'%name))
+        else:
+            plt.savefig(os.path.join(self.result_path,'netvalue.jpg'))
+
+    def group_alpha(self,alpha,*args):
+        # 将alpha进行分组 可根据本身分组 或者根据其他条件进行分组
+        pass
+
+    def cal_IC(self,alpha):
+        # 计算逐年ic
+        c2c_ret = (self.close.diff() / self.close.shift()).shift(-1)
+        ICs = corr_mat(alpha,c2c_ret.values)
+        return ICs
+
+    def cal_RankIC(self,alpha):
+        # 计算因子的rankIC
+        c2c_ret = (self.close.diff() / self.close.shift()).shift(-1)
+        rankRet = self.rank_alpha(c2c_ret.values)
+        rankAlpha = self.rank_alpha(alpha)
+        rankICs = corr_mat(rankAlpha,rankRet)
+        return rankICs
+
+    def cal_IR(self,IC):
+        # 计算IR
+        ICIR = np.nanmean(IC)/np.nanstd(IC)*np.sqrt(252)
+        return ICIR
+
     def alpha_performance(self,alpha,low = 0.0,high = 0.1):
         # 进行所有统计描述数据的汇总
         position = self.get_position(alpha,low = low,high= high)
@@ -130,8 +162,20 @@ class EvaAlpha(object):
         maxdrawdown = self.get_maxDrawDown(netvalue)
         annRet = self.get_annRet(ret)
         self.NetValueGraph(netvalue)
-        print('%s-%s :annReturn:%5.2f | turnover:%7.4f | sharpe:%5.2f | maxdrawdown:%5.2f |' %(self.start_date,self.end_data,annRet,turnover,sharpe,maxdrawdown))
-        # todo 计算IC值及相关的处理； 目前已有功能测试通过
+        # todo 计算IC值及相关的处理
+        IC = self.cal_IC(alpha)
+        rankIC = self.cal_RankIC(alpha)
+        cumIC = np.nancumsum(IC)
+        cumrankIC = np.nancumsum(rankIC)
+        cumIC_mat = pd.DataFrame({'IC':cumIC,'rankIC':cumrankIC})
+        cumIC_mat.to_csv(os.path.join(self.result_path,'cumIC.csv'))
+        ax = cumIC_mat.plot()
+        fig = ax.get_figure()
+        fig.savefig(os.path.join('cumIC.png'))
+        ICIR = self.cal_IR(IC)
+        rankICIR = self.cal_IR(rankIC)
+        print('%s-%s :annReturn:%5.2f | turnover:%7.4f | sharpe:%5.2f | maxdrawdown:%5.2f | ICIR:%5.2f |rankICIR:%5.2f |'
+              % (self.start_date, self.end_data, annRet, turnover, sharpe, maxdrawdown,ICIR,rankICIR))
 
     def graph_analysis(self,type = 1):
         # todo 完善画图功能
@@ -164,39 +208,6 @@ class EvaAlpha(object):
             print('%s :  annReturn:%5.2f | turnover:%7.4f | sharpe:%5.2f | maxdrawdown:%5.2f |' %(year,annRet,turnover,sharpe,maxdrawdown))
         # todo 需要进行数据储存；已有功能已经通过测试
 
-    def NetValueGraph(self,netvalue,name = 0):
-        # 根据净值进行画图
-        # todo 精细化作图 包括处理颜色 标题 以及 横坐标的标签等
-        plt.plot(netvalue)
-        plt.title('net value of the alpha')
-        if name:
-            plt.savefig(os.path.join(self.result_path,'netvalue_%s.jpg'%name))
-        else:
-            plt.savefig(os.path.join(self.result_path,'netvalue.jpg'))
-
-    def group_alpha(self,alpha,*args):
-        # 将alpha进行分组 可根据本身分组 或者根据其他条件进行分组
-        pass
-
-    def cal_IC(self,alpha):
-        # 计算逐年ic
-        c2c_ret = (self.close.diff() / self.close.shift()).shift(-1)
-        ICs = corr_mat(alpha,c2c_ret)
-        return ICs
-
-    def cal_RankIC(self,alpha):
-        # 计算因子的rankIC
-        c2c_ret = (self.close.diff() / self.close.shift()).shift(-1)
-        rankRet = self.rank_alpha(c2c_ret)
-        rankAlpha = self.rank_alpha(alpha)
-        rankICs = corr_mat(rankAlpha,rankRet)
-        return rankICs
-
-    def cal_IR(self,IC):
-        # 计算IR
-        ICIR = np.nanmean(IC)/np.nanstd(IC)*np.sqrt(252)
-        return ICIR
-
     def level_alpha(self,alpha,level = 10):
         # 进行10分组的回测 也可以自己定义分组
         lowBond = np.linspace(0,1,level+1)
@@ -224,9 +235,4 @@ class EvaAlpha(object):
         fig.savefig(os.path.join('%s_level_netvalue.png'%level))
         stats = pd.DataFrame(stats,index=['annRet','sharpe','turnover','maxdrawdown'])
         stats.to_csv(os.path.join(self.result_path,'%s_level_result.csv'%level))
-
-
-
-
-
 

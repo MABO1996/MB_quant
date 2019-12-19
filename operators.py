@@ -35,7 +35,7 @@ def ts_delta(data,period):
 def corr_vet(vet1,vet2):
     # 计算两个向量的相关性 如果存在nan值怎么处理 两个向量的nan值所在的位置不同
     # 取两个vect都不为nan的值
-    notNullIndex = ~(np.isnan(vet1) or np.isnan(vet2))
+    notNullIndex = ~(np.isnan(vet1*vet2))
     new_vet1 = vet1[notNullIndex]
     new_vet2 = vet2[notNullIndex]
     corr = np.corrcoef(new_vet1,new_vet2)[0,1]
