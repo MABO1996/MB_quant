@@ -10,8 +10,9 @@ class DataLoader(object):
 
     def __init__(self):
         self.data_path = r'F:\bma\project\data'
-        self.data_list = ['tradingstatus', 'close', 'open', 'high', 'low', 'avgprice', 'volume', 'adjustfactor', 'volumeyuan',
-             'turnoverrate']
+        # self.data_list = ['tradingstatus', 'close', 'open', 'high', 'low', 'avgprice', 'volume', 'adjustfactor', 'volumeyuan',
+        #      'turnoverrate']
+        self.data_list = ['tradingstatus', 'close','adjustfactor']
 
     def load_price_data(self):
         self.data_dict = {}

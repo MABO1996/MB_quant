@@ -21,6 +21,7 @@ class Alpha(object):
         self.close_re = self.close.values*self.adj.values
         self.ret = self.close_re - ts_delay(self.close_re,1)
         self.data_path = r'F:\bma\project\data'
+
         self.tradeday = self.close.index
         self.tickers = self.close.columns
 
@@ -43,7 +44,9 @@ class Alpha(object):
 
     def FactorPerformence(self):
         # 进行单因子的各种测试
-        pass
+        Evaluator = EvaAlpha()
+        alpha = pd.read_csv(os.path.join(self.data_path,'rtn20.csv'),index_col= 0).values
+        Evaluator.level_alpha(alpha)
 
     def save_data(self,data,name):
         tempdata = pd.DataFrame(data,index=self.tradeday,columns=self.tickers)
