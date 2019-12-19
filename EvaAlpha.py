@@ -12,6 +12,11 @@ class EvaAlpha(object):
         self.data_path = r'F:\bma\project\data'
         self.close = pd.read_csv(os.path.join(self.data_path,'close.csv'))
         self.open = pd.read_csv(os.path.join(self.data_path,'open.csv'))
+        self.tradeday = pd.read_csv(os.path.join((self.data_path,'tradeday.csv')), parse_dates = ['date'])
+        self.tickers = pd.read_csv(os.path.join(self.data_path,'tickers.csv'))
+        self.start_date = self.tradeday.iloc[0].date.strftime("%Y-%m-%d")
+        self.end_data = self.tradeday.iloc[-1].date.strftime("%Y-%m-%d")
+
 
     def get_position(self,alpha,low = 0,high = 0.1,weightType = 0,long= 1):
         # 根据因子获取股票的仓位 分为多头和空头
@@ -30,7 +35,7 @@ class EvaAlpha(object):
                 position[flag] = 1.0
                 position = -position/np.nansum(position,axis=1)
             elif long == 0:
-            # todo 多空的权重之和
+
             # 多空的权重怎么算 多头为1 还是空头为1 还是多空合起来为1
                 indexlong = (rankAlpha > low) & (rankAlpha < high)
                 indexshort = (rankAlpha < 1-low) & (rankAlpha > 1-high)
@@ -45,7 +50,7 @@ class EvaAlpha(object):
             pass
         return position
 
-    def rank_alpha(self,alpha):
+    def rank_alpha(alpha):
         # 将alpha因子转化为 01之间的排序
         rankAlpha = bk.nanrankdata(alpha,axis=1)
         rankAlpha = (rankAlpha+1)/2
@@ -67,18 +72,18 @@ class EvaAlpha(object):
         ret = holdRet + buyRet + sellRet
         return ret
 
-    def get_netvalue(self,ret):
+    def get_netvalue(ret):
         # 根据收益率计算净值
         net_value = np.cumprod(ret + 1)
         return net_value
 
-    def get_maxDrawDown(self,netvalue):
+    def get_maxDrawDown(netvalue):
         # 根据净值计算最大回撤
         # 默认netvalue 不会出现nan
         maxdrawdown = ((np.maximum.accumulate(netvalue) - netvalue) / np.maximum.accumulate(netvalue)).max()
         return maxdrawdown
 
-    def get_sharpeRatio(self,ret,type = 0):
+    def get_sharpeRatio(ret,type = 0):
         # 根据收益率计算sharpe
         # 默认为不考虑无风险收益率 如多空组合等 当为其他类型时 考虑无风险收益 如纯多组合
         rf = 0.02
@@ -87,12 +92,12 @@ class EvaAlpha(object):
         else:
             return (np.mean(ret) ) / np.std(ret)
 
-    def get_annRet(self,ret):
+    def get_annRet(ret):
         # 计算平均的年化收益
         annRet = np.mean(ret)*252
         return annRet
 
-    def get_turnover(self,position):
+    def get_turnover(position):
         # 根据持仓计算换手率
         # 考虑换手 加上手续费
         buyPosition = (ts_delta(position, 1) > 0) * (ts_delta(position, 1))
@@ -112,9 +117,36 @@ class EvaAlpha(object):
         turnover = self.get_turnover(position)
         sharpe = self.get_sharpeRatio(ret)
         maxdrawdown = self.get_maxDrawDown(netvalue)
+        annRet = self.get_annRet(ret)
         self.NetValueGraph(netvalue)
+        print('%s-%s : annReturn:%s | turnover:%s | sharpe:%s | maxdrawdown:%s |' %(self.start_date,self.end_data,annRet,turnover,sharpe,maxdrawdown))
 
-        # todo 进行逐年的年检测
+
+    def year_alpha_performance(self,alpha,low = 0.0,high = 0.1):
+        # todo 进行逐年的年检测 还需要完善存储数据的功能
+        position = self.get_position(alpha,low = low,high= high)
+        ret = self.get_ret(position)
+        netvalue = self.get_netvalue(ret)
+        tradeday_copy = self.tradeday.copy()
+        tradeday_copy.set_index(['date'], inplace=True, drop=False)
+        grouped = tradeday_copy.groupby(lambda x: x.year)
+        yearstart =  grouped.first()
+        yearend = grouped.last()
+        num_index = np.arange(len(tradeday_copy))
+        for i in range(len(yearend)):
+            start = yearstart.iloc[i].date.strftime("%Y-%m-%d")
+            end =  yearend.iloc[i].date.strftime("%Y-%m-%d")
+            year = yearstart.iloc[i].date.year
+            startindex = num_index[tradeday_copy['date'].isin([start])]
+            endindex = num_index[tradeday_copy['date'].isin([end])]
+            subposition = position[startindex:endindex+1]
+            subret = ret[startindex:endindex+1]
+            subnetvalue = netvalue[startindex:endindex+1]
+            turnover = self.get_turnover(subposition)
+            sharpe = self.get_sharpeRatio(subret)
+            maxdrawdown = self.get_maxDrawDown(subnetvalue)
+            annRet = self.get_annRet(subret)
+            print('%s : annReturn:%s | turnover:%s | sharpe:%s | maxdrawdown:%s |' %(year,annRet,turnover,sharpe,maxdrawdown))
 
     def NetValueGraph(self,netvalue,name = 0):
         # 根据净值进行画图

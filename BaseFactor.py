@@ -4,6 +4,7 @@
 from load_data import DataLoader
 from operators import *
 from EvaAlpha import EvaAlpha
+import os
 
 class Alpha(object):
 
@@ -19,9 +20,10 @@ class Alpha(object):
         self.adj = self.data_dict['adjustfactor']
         self.close_re = self.close.values*self.adj.values
         self.ret = self.close_re - ts_delay(self.close_re,1)
-
+        self.data_path = r'F:\bma\project\data'
         self.tradeday = self.close.index
         self.tickers = self.close.columns
+
 
     def load_data(self):
         self.dataloader = DataLoader()
@@ -34,10 +36,16 @@ class Alpha(object):
         计算alpha因子，能够进行矩阵运算的就进行矩阵运算
         '''
         # 计算一个20日的收益率均值
+        returns = pd.read_csv(os.path.join(self.data_path,'return.csv'),index_col= 0)
+        rtn20 = ts_mean(returns.values,20)
+        self.save_data(rtn20,'rtn20')
 
-        # RTN20 =
 
     def FactorPerformence(self):
         # 进行单因子的各种测试
         pass
+
+    def save_data(self,data,name):
+        tempdata = pd.DataFrame(data,index=self.tradeday,columns=self.tickers)
+        tempdata.to_csv(os.path.join(self.data_path,name+'.csv'))
 
