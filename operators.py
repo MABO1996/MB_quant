@@ -156,7 +156,6 @@ def multi_regression_resid(datay, *args):
     resid_result[ not_nan_index ] = results.resid
     return resid_result
 
-
 def all_period_multi_regression_resid(datay, *args):
     # 单元多期的残差获取
     resid_mat = np.zeros_like(datay)

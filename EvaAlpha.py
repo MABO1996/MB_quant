@@ -9,7 +9,7 @@ np.warnings.filterwarnings('ignore')
 
 class EvaAlpha(object):
 
-    def __init__(self):
+    def __init__(self,config):
         self.data_path = r'F:\bma\project\data'
         self.result_path = r'F:\bma\project\FactorAnalysis\MB_quant\results'
         self.close = pd.read_csv(os.path.join(self.data_path,'close.csv'),index_col=0)
@@ -19,12 +19,18 @@ class EvaAlpha(object):
         self.start_date = self.tradeday.iloc[0].date.strftime("%Y/%m/%d")
         self.end_data = self.tradeday.iloc[-1].date.strftime("%Y/%m/%d")
 
+        self.suspendFlag = pd.read_csv(os.path.join(self.data_path,'suspend.csv'))
+        self.upLimit = pd.read_csv(os.path.join(self.data_path,'upLimit.csv'))
+        self.downLimit = pd.read_csv(os.path.join(self.data_path,'downLimit.csv'))
+        self.config = config
+
     def get_position(self,alpha,low = 0,high = 0.1,weightType = 0,long= 1):
         # 根据因子获取股票的仓位 分为多头和空头
         # long = 1纯多头；long = -1；纯空头long = 0多空
         # 不同的持仓权重类型 type = 0 的时候为等权 type = 1 为市值加权；
         rankAlpha = self.rank_alpha(alpha)
         rankAlpha = ts_delay(rankAlpha,1)
+        # todo 加上精细化的处理
         if weightType == 0:
             if long == 1:
                 flag = (rankAlpha > low) & (rankAlpha < high)
@@ -82,6 +88,20 @@ class EvaAlpha(object):
         ret = holdRet + buyRet + sellRet
         return ret
 
+    def get_excessRet(self,ret,indexType = 1):
+        # type = 1 为上证综指数；type = 2 为沪深300；type=3为中证500
+        self.load_IndexRet()
+        if indexType == 1:
+            indexRet = self.SZindex_ret
+            excessRet = ret - indexRet
+        elif indexType ==2:
+            indexRet = self.hs300_ret
+            excessRet = ret - indexRet
+        elif indexType == 3:
+            indexRet = self.zh500_ret
+            excessRet = ret - indexRet
+        return excessRet
+
     def get_netvalue(self,ret):
         # 根据收益率计算净值
         net_value = np.cumprod(ret + 1)
@@ -107,9 +127,11 @@ class EvaAlpha(object):
         annRet = np.mean(ret)*252
         return annRet
 
-    def get_turnover(self,position):
+    def get_turnover(self,position,cost_rate = 0.002):
         # 根据持仓计算换手率
         # 考虑换手 加上手续费
+        # 买卖算200% 对应的双边的手续费算千2； 如果是单边的手续费（不算卖出的），手续费算千4
+        cost_rate = cost_rate
         buyPosition = (ts_delta(position, 1) > 0) * (ts_delta(position, 1))
         sellPosition = (ts_delta(position, 1) < 0) * (ts_delta(position, 1))
 
@@ -117,17 +139,28 @@ class EvaAlpha(object):
         sellTurnover = np.nansum(sellPosition,axis=1)
 
         turnoverrate = np.nanmean(buyTurnover - sellTurnover)
-        return turnoverrate
+        cost = (buyTurnover -sellTurnover)*cost_rate
+        return turnoverrate,cost
 
     def NetValueGraph(self,netvalue,name = 0):
         # 根据净值进行画图
-        # todo 精细化作图 包括处理颜色 标题 以及 横坐标的标签等
+        # todo 这里可能使用dataFrame 效果会更好一点可以直接标注legend；同时处理多个数据
         plt.plot(netvalue)
         plt.title('net value of the alpha')
         if name:
             plt.savefig(os.path.join(self.result_path,'netvalue_%s.jpg'%name))
         else:
             plt.savefig(os.path.join(self.result_path,'netvalue.jpg'))
+
+    def load_IndexRet(self,type = 1):
+        # type = 1 为上证综指数；type = 2 为沪深300；type=3为中证500
+        index_list  = ['000001.SH','000300.SH','000016.SH','000905.SH']
+        index_close = pd.read_csv(os.path.join(self.data_path,'index_close.csv'),index_col = 0)
+        index_ret = index_close.diff()/index_close.shift()
+        self.SZindex_ret = index_ret[index_list[0]]
+        self.hs300_ret = index_ret[[index_list[1]]]
+        self.zh50_ret = index_ret[index_ret[2]]
+        self.zh500_ret = index_ret[index_ret[3]]
 
     def group_alpha(self,alpha,*args):
         # 将alpha进行分组 可根据本身分组 或者根据其他条件进行分组
@@ -156,12 +189,18 @@ class EvaAlpha(object):
         # 进行所有统计描述数据的汇总
         position = self.get_position(alpha,low = low,high= high)
         ret = self.get_ret(position)
+        turnover,cost = self.get_turnover(position)
+        ret = ret - cost
         netvalue = self.get_netvalue(ret)
-        turnover = self.get_turnover(position)
         sharpe = self.get_sharpeRatio(ret)
         maxdrawdown = self.get_maxDrawDown(netvalue)
         annRet = self.get_annRet(ret)
-        self.NetValueGraph(netvalue)
+
+        excessRet = self.get_excessRet(ret,1)
+        excessRet_netvalue = self.get_netvalue(excessRet)
+
+        self.NetValueGraph(excessRet_netvalue,'excessRet'+self.config['FactorName'])
+        self.NetValueGraph(netvalue,self.config['FactorName'])
         # todo 计算IC值及相关的处理
         IC = self.cal_IC(alpha)
         rankIC = self.cal_RankIC(alpha)
@@ -200,12 +239,13 @@ class EvaAlpha(object):
             endindex = int(num_index[tradeday_copy['date'].isin([end])][0])
             subposition = position[startindex:endindex+1]
             subret = ret[startindex:endindex+1]
+            subturnover,subcost = self.get_turnover(subposition)
+            subret = subret - subcost
             subnetvalue = netvalue[startindex:endindex+1]
-            turnover = self.get_turnover(subposition)
             sharpe = self.get_sharpeRatio(subret)
             maxdrawdown = self.get_maxDrawDown(subnetvalue)
             annRet = self.get_annRet(subret)
-            print('%s :  annReturn:%5.2f | turnover:%7.4f | sharpe:%5.2f | maxdrawdown:%5.2f |' %(year,annRet,turnover,sharpe,maxdrawdown))
+            print('%s :  annReturn:%5.2f | turnover:%7.4f | sharpe:%5.2f | maxdrawdown:%5.2f |' %(year,annRet,subturnover,sharpe,maxdrawdown))
         # todo 需要进行数据储存；已有功能已经通过测试
 
     def level_alpha(self,alpha,level = 10):
@@ -218,8 +258,9 @@ class EvaAlpha(object):
             time1 = time.time()
             temp_position = self.get_position(alpha,lowBond[i],highBond[i])
             ret = self.get_ret(temp_position)
+            turnover,cost = self.get_turnover(temp_position)
+            ret = ret - cost
             netvalue = self.get_netvalue(ret)
-            turnover = self.get_turnover(temp_position)
             sharpe = self.get_sharpeRatio(ret)
             maxdrawdown = self.get_maxDrawDown(netvalue)
             annRet = self.get_annRet(ret)

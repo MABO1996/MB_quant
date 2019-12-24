@@ -9,6 +9,8 @@ import os
 class Alpha(object):
 
     def __init__(self,config):
+
+        self.config = config
         self.name = config['FactorName']
         self.startdate = config['start']
         self.enddate = config['end']
@@ -44,7 +46,7 @@ class Alpha(object):
 
     def FactorPerformence(self):
         # 进行单因子的各种测试
-        Evaluator = EvaAlpha()
+        Evaluator = EvaAlpha(self.config)
         alpha = pd.read_csv(os.path.join(self.data_path,'rtn20.csv'),index_col= 0).values
         Evaluator.alpha_performance(alpha)
 
