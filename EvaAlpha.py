@@ -12,16 +12,20 @@ class EvaAlpha(object):
     def __init__(self,config):
         self.data_path = r'F:\bma\project\data'
         self.result_path = r'F:\bma\project\FactorAnalysis\MB_quant\results'
-        self.close = pd.read_csv(os.path.join(self.data_path,'close.csv'),index_col=0)
-        self.open = pd.read_csv(os.path.join(self.data_path,'open.csv'),index_col=0)
+        dataloader = DataLoader()
+        datadict = dataloader.load_eval_data()
         self.tradeday = pd.read_csv(os.path.join(self.data_path,'tradeday.csv'), parse_dates = ['date'])
         self.tickers = pd.read_csv(os.path.join(self.data_path,'tickers.csv'))
         self.start_date = self.tradeday.iloc[0].date.strftime("%Y/%m/%d")
         self.end_data = self.tradeday.iloc[-1].date.strftime("%Y/%m/%d")
 
-        self.suspendFlag = pd.read_csv(os.path.join(self.data_path,'suspend.csv'))
-        self.upLimit = pd.read_csv(os.path.join(self.data_path,'upLimit.csv'))
-        self.downLimit = pd.read_csv(os.path.join(self.data_path,'downLimit.csv'))
+        self.close = datadict['close']
+        self.open = datadict['open']
+
+        self.suspendFlag = datadict['suspend']
+        self.upLimit = datadict['upperLimit']
+        self.downLimit = datadict['downLimit']
+
         self.config = config
 
     def get_position(self,alpha,low = 0,high = 0.1,weightType = 0,long= 1):
@@ -201,7 +205,7 @@ class EvaAlpha(object):
 
         self.NetValueGraph(excessRet_netvalue,'excessRet'+self.config['FactorName'])
         self.NetValueGraph(netvalue,self.config['FactorName'])
-        # todo 计算IC值及相关的处理
+        # 计算IC相关的统计量
         IC = self.cal_IC(alpha)
         rankIC = self.cal_RankIC(alpha)
         cumIC = np.nancumsum(IC)

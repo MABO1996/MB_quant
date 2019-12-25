@@ -49,6 +49,28 @@ def corr_mat(mat1,mat2):
     corrs = np.array(corrs)
     return corrs
 
+def cr_std(data):
+    # 进行截面上的标准差
+    std = bk.nanstd(data,axis=1)
+    return std
+
+def cr_mean(data):
+    # 进行截面上的均值
+    mean = bk.nanmean(data,axis=1)
+    return mean
+
+def cr_max(data):
+    max = bk.nanmax(data,axis=1)
+    return max
+
+def cr_min(data):
+    min = bk.nanmin(data,axis=1)
+    return min
+
+def cr_median(data):
+    median = bk.nanmedian(data,axis=1)
+    return median
+
 def all_period_cross_simple_regression(datay,datax):
     # 进行单元回归 每一期进行回归
     paramList = []

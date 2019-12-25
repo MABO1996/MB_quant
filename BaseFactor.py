@@ -4,6 +4,8 @@
 from load_data import DataLoader
 from operators import *
 from EvaAlpha import EvaAlpha
+
+import bottleneck as bk
 import os
 
 class Alpha(object):
@@ -27,22 +29,21 @@ class Alpha(object):
         self.tradeday = self.close.index
         self.tickers = self.close.columns
 
-
     def load_data(self):
         self.dataloader = DataLoader()
-        self.dataloader.load_price_data()
-        self.data_dict = self.dataloader.data_dict
-
+        self.data_dict = self.dataloader.load_price_data()
 
     def CalculateAlpha(self):
         '''
         计算alpha因子，能够进行矩阵运算的就进行矩阵运算
+        注意 计算alpha因子时就应去掉 停牌 和 ST
         '''
         # 计算一个20日的收益率均值
+
         returns = pd.read_csv(os.path.join(self.data_path,'return.csv'),index_col= 0)
         rtn20 = ts_mean(returns.values,20)
+        rtn20 = self.standard_alpha(rtn20)
         self.save_data(rtn20,'rtn20')
-
 
     def FactorPerformence(self):
         # 进行单因子的各种测试
@@ -54,3 +55,18 @@ class Alpha(object):
         tempdata = pd.DataFrame(data,index=self.tradeday,columns=self.tickers)
         tempdata.to_csv(os.path.join(self.data_path,name+'.csv'))
 
+    def standard_alpha(self,alpha):
+        # 对alpha进行去极值和归一化
+
+        alpha = self.filter_extreme_MAD(alpha,3)
+
+        normlized_alpha = ((alpha.T - cr_mean(alpha))/cr_std(alpha)).T
+
+        return normlized_alpha
+
+    def filter_extreme_MAD(self,data, n):  # MAD: 中位数去极值
+        median = bk.nanmedian(data, axis=1)
+        new_median = bk.nanmedian((np.abs(data.T - median).T), axis=1)
+        max_range = median + n * new_median
+        min_range = median - n * new_median
+        return np.clip(data.T, min_range, max_range).T
