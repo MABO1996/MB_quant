@@ -191,6 +191,7 @@ class EvaAlpha(object):
 
     def alpha_performance(self,alpha,low = 0.0,high = 0.1):
         # 进行所有统计描述数据的汇总
+        # todo 考虑多空组合 ，指数对冲的数据统计情况
         time1 = time.time()
         position = self.get_position(alpha,low = low,high= high)
         ret = self.get_ret(position)

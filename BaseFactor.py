@@ -113,10 +113,10 @@ class Alpha(object):
         industry_dummy = {}
         for i, industry in enumerate(quantlevel_list.iloc[:, 0]):
             if i == len(quantlevel_list.iloc[:, 0]) - 1:
-                print('\r%s' % '#' * (i + 1) + ' ' * (len(quantlevel_list.iloc[:, 0]) - i) + '%s/%s' % (
-                    i + 1, len(quantlevel_list.iloc[:, 0])))
+                print('\r%s' % ('#' * (i + 1) + ' ' * (len(quantlevel_list.iloc[:, 0]) - i) + '%s/%s' % (
+                    i + 1, len(quantlevel_list.iloc[:, 0]))))
             else:
-                print('\r%s' % '#' * (i + 1) + ' ' * (len(quantlevel_list.iloc[:, 0]) - i) + '%s/%s' % (
-                i + 1, len(quantlevel_list.iloc[:, 0])), end='')
+                print('\r%s' % ('#' * (i + 1) + ' ' * (len(quantlevel_list.iloc[:, 0]) - i) + '%s/%s' % (
+                i + 1, len(quantlevel_list.iloc[:, 0]))), end='')
             industry_dummy.update({industry: quantlevel == industry})
         return industry_dummy
