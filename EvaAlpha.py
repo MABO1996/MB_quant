@@ -163,8 +163,8 @@ class EvaAlpha(object):
         index_ret = index_close.diff()/index_close.shift()
         self.SZindex_ret = index_ret[index_list[0]]
         self.hs300_ret = index_ret[[index_list[1]]]
-        self.zh50_ret = index_ret[index_ret[2]]
-        self.zh500_ret = index_ret[index_ret[3]]
+        self.zh50_ret = index_ret[index_list[2]]
+        self.zh500_ret = index_ret[index_list[3]]
 
     def group_alpha(self,alpha,*args):
         # 将alpha进行分组 可根据本身分组 或者根据其他条件进行分组
@@ -191,6 +191,7 @@ class EvaAlpha(object):
 
     def alpha_performance(self,alpha,low = 0.0,high = 0.1):
         # 进行所有统计描述数据的汇总
+        time1 = time.time()
         position = self.get_position(alpha,low = low,high= high)
         ret = self.get_ret(position)
         turnover,cost = self.get_turnover(position)
@@ -203,7 +204,7 @@ class EvaAlpha(object):
         excessRet = self.get_excessRet(ret,1)
         excessRet_netvalue = self.get_netvalue(excessRet)
 
-        self.NetValueGraph(excessRet_netvalue,'excessRet'+self.config['FactorName'])
+        # self.NetValueGraph(excessRet_netvalue,'excessRet'+self.config['FactorName'])
         self.NetValueGraph(netvalue,self.config['FactorName'])
         # 计算IC相关的统计量
         IC = self.cal_IC(alpha)
@@ -217,6 +218,8 @@ class EvaAlpha(object):
         fig.savefig(os.path.join('cumIC.png'))
         ICIR = self.cal_IR(IC)
         rankICIR = self.cal_IR(rankIC)
+        time2 = time.time()
+        print('evel alpha cost {:.2f} s'.format(time2-time1))
         print('%s-%s :annReturn:%5.2f | turnover:%7.4f | sharpe:%5.2f | maxdrawdown:%5.2f | ICIR:%5.2f |rankICIR:%5.2f |'
               % (self.start_date, self.end_data, annRet, turnover, sharpe, maxdrawdown,ICIR,rankICIR))
 
@@ -280,4 +283,5 @@ class EvaAlpha(object):
         fig.savefig(os.path.join('%s_level_netvalue.png'%level))
         stats = pd.DataFrame(stats,index=['annRet','sharpe','turnover','maxdrawdown'])
         stats.to_csv(os.path.join(self.result_path,'%s_level_result.csv'%level))
+        print(stats)
 

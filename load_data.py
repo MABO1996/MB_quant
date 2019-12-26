@@ -17,11 +17,10 @@ class DataLoader(object):
         # 考虑到有时候需要认为进行股票过滤
         filter_dict = {}
         kechuangban = pd.read_csv(os.path.join(self.data_path,'kechuangban_list.csv'),index_col=0)
-
+        # todo ST数据暂时先不考虑了 数据缺失一部分
         STFlag = pd.read_csv(os.path.join(self.data_path,'ST.csv'),index_col=0)
 
-
-
+        suspend = pd.read_csv(os.path.join(self.data_path,'suspend.csv'),index_col=0)
 
     def load_price_data(self):
 
@@ -45,7 +44,7 @@ class DataLoader(object):
         for data_name in data_list:
             data_dict[data_name] = pd.read_csv(os.path.join(self.data_path,data_name+'.csv'),index_col=0)
         time2 = time.time()
-        print('loading data costs %.2f s'.center(60,'#') % (time2-time1))
+        print('loading eval data costs %.2f s'.center(60,'#') % (time2-time1))
         return data_dict
 
     def get_exraData(self,datalist):

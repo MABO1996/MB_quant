@@ -39,17 +39,18 @@ class Alpha(object):
         注意 计算alpha因子时就应去掉 停牌 和 ST
         '''
         # 计算一个20日的收益率均值
+        pass
 
-        returns = pd.read_csv(os.path.join(self.data_path,'return.csv'),index_col= 0)
-        rtn20 = ts_mean(returns.values,20)
-        rtn20 = self.standard_alpha(rtn20)
-        self.save_data(rtn20,'rtn20')
-
-    def FactorPerformence(self):
+    def FactorPerformence(self,alpha_name):
         # 进行单因子的各种测试
         Evaluator = EvaAlpha(self.config)
-        alpha = pd.read_csv(os.path.join(self.data_path,'rtn20.csv'),index_col= 0).values
+        alpha = pd.read_csv(os.path.join(self.data_path,alpha_name + '.csv'),index_col= 0).values
+
+        Evaluator.level_alpha(alpha)
+
         Evaluator.alpha_performance(alpha)
+
+        Evaluator.year_alpha_performance(alpha)
 
     def save_data(self,data,name):
         tempdata = pd.DataFrame(data,index=self.tradeday,columns=self.tickers)
@@ -70,3 +71,52 @@ class Alpha(object):
         max_range = median + n * new_median
         min_range = median - n * new_median
         return np.clip(data.T, min_range, max_range).T
+
+    def factor_neut(self,alpha,type = 1):
+        # 因子中性化：type=0，不进行中性化；type=1 为市值中性化；type = 2为市值，行业中性化；type=3为市值，行业，风格中性化；
+        if type == 1:
+            lncap = pd.read_csv(os.path.join(self.data_path,'lncap.csv'),index_col=0)
+            lncap = self.standard_alpha(lncap.values)
+            clean_factor = all_period_simple_regression_resid(alpha,lncap)
+            return clean_factor
+        elif type == 2:
+            lncap = pd.read_csv(os.path.join(self.data_path,'lncap.csv'),index_col=0)
+            lncap = self.standard_alpha(lncap.values)
+            quantlevel = pd.read_csv(os.path.join(self.data_path, 'quant1level1.csv'), index_col=0, low_memory=False)
+            quantlevel_list = pd.read_csv(os.path.join(self.data_path, 'quantlevelname.csv'), encoding='gbk')['quantlevel']
+            industry_dummy_dict = self.get_industry_dummy(quantlevel)
+            dummy_data_list = list(industry_dummy_dict.values()) # 保持行业的顺序 可以快速对应起来
+            dummy_data_list = [x.values*1 for x in dummy_data_list]
+            datax = [lncap] + dummy_data_list
+            clean_data = all_period_multi_regression_resid(alpha,datax)
+            return clean_data
+        elif type == 3:
+            pass
+
+    def save_industry_dummy(self,quantlevel):
+        quantlevel_list = pd.read_csv(os.path.join(self.data_path, 'quantlevelname.csv'), encoding='gbk')
+        # quantlevel = pd.read_csv(os.path.join(data_path, 'quant1level1.csv'), index_col=0, low_memory=False)
+        industry_dummy = {}
+        for i,industry in enumerate(quantlevel_list.iloc[:, 0]):
+            if i ==len(quantlevel_list.iloc[:, 0])-1:
+                print('\r%s'%'#' * (i + 1) + ' ' * (len(quantlevel_list.iloc[:, 0]) - i) + '%s/%s' % (
+                i + 1, len(quantlevel_list.iloc[:, 0])))
+            else:
+                print('\r%s'%'#'*(i+1) + ' '*(len(quantlevel_list.iloc[:, 0])-i)+'%s/%s'%(i+1,len(quantlevel_list.iloc[:, 0])),end='')
+            temp_data = quantlevel == industry
+            temp_data.to_csv(os.path.join(self.data_path,'industry/%s.csv'%industry))
+            industry_dummy.update({industry: quantlevel == industry})
+        return industry_dummy
+
+    def get_industry_dummy(self,quantlevel):
+        quantlevel_list = pd.read_csv(os.path.join(self.data_path, 'quantlevelname.csv'), encoding='gbk')
+        industry_dummy = {}
+        for i, industry in enumerate(quantlevel_list.iloc[:, 0]):
+            if i == len(quantlevel_list.iloc[:, 0]) - 1:
+                print('\r%s' % '#' * (i + 1) + ' ' * (len(quantlevel_list.iloc[:, 0]) - i) + '%s/%s' % (
+                    i + 1, len(quantlevel_list.iloc[:, 0])))
+            else:
+                print('\r%s' % '#' * (i + 1) + ' ' * (len(quantlevel_list.iloc[:, 0]) - i) + '%s/%s' % (
+                i + 1, len(quantlevel_list.iloc[:, 0])), end='')
+            industry_dummy.update({industry: quantlevel == industry})
+        return industry_dummy

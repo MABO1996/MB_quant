@@ -118,7 +118,8 @@ def all_period_simple_regression_resid(datay, datax):
     for i in range(datay.shape[0]):
         x = datax[i]
         y = datay[i]
-
+        if np.sum(~np.isnan(y)) ==0:
+            continue
         not_nan_flag = ~(np.isnan(x * y))
         not_nan_index = np.arange(len(not_nan_flag))[not_nan_flag]
 
@@ -143,7 +144,7 @@ def multi_regression(datay,datax):
     results = model.fit()
     return results.params # 参数为常数开始 其余的对应datax的顺序
 
-def all_period_cross_multi_regression(datay,*args):
+def all_period_cross_multi_regression(datay,args):
     paramList = []
     for i in range(datay.shape[0]):
         x = []
@@ -151,12 +152,17 @@ def all_period_cross_multi_regression(datay,*args):
             x.append(datax[i])
         x = np.vstack(x)
         y = datay[i]
+        if np.sum(~np.isnan(y)) ==0:
+            nan_params = np.zeros(len(args)+1)
+            nan_params[:] = np.nan
+            paramList.append(nan_params)
+            continue
         params = multi_regression(y,x)
         paramList.append(params)
     paramList = np.array(paramList)
     return paramList
 
-def multi_regression_resid(datay, *args):
+def multi_regression_resid(datay, args):
     # 进行多元回归 一期
     x = [ ]
     for datax in args:
@@ -178,7 +184,7 @@ def multi_regression_resid(datay, *args):
     resid_result[ not_nan_index ] = results.resid
     return resid_result
 
-def all_period_multi_regression_resid(datay, *args):
+def all_period_multi_regression_resid(datay, args):
     # 单元多期的残差获取
     resid_mat = np.zeros_like(datay)
     resid_mat[:] = np.nan
@@ -189,6 +195,8 @@ def all_period_multi_regression_resid(datay, *args):
             x.append(datax[i])
         x = np.vstack(x)
         y = datay[i]
+        if np.sum(~np.isnan(y)) ==0:
+            continue
         not_nan_flag = ~np.any(np.isnan(x * y), axis=0)
         not_nan_index = np.arange(len(not_nan_flag))[not_nan_flag]
 
